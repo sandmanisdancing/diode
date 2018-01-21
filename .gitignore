@@ -1,0 +1,5 @@
+node_modules/
+.tmp/
+app.yaml
+firebase-debug.log
+dist/images/icons/*.webp

@@ -1,0 +1,22 @@
+
+
+:root {
+  --text-color: #3b4952;
+
+  --main-color: #0d7714;
+  --maindark-color: #043808;
+
+  --secondary-color: #a008b7;
+  --secondarydark-color: #43074c;
+
+  --warning-color: #cd0000;
+  --warningdark-color: #7b0000;
+
+  --link-color: #3166d0;
+  --linkdark-color: #032567;
+
+  --bg-color: #d1d7db;
+  --bglight-color: #f7f8fb;
+
+  --font-name: 'Open Sans', sans-serif;
+}

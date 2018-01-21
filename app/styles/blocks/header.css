@@ -1,0 +1,41 @@
+.pageheader {
+  background-color: var(--bg-color);
+  padding: 20px;
+  margin-bottom: 40px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.controls button {
+  border: none;
+  background: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.controls__u {
+  color: #FDDA24;
+  text-decoration: underline;
+}
+
+.controls__u:hover {
+  color: #bda31f;
+}
+
+.controls__time {
+  color: #677075;
+}
+
+.controls__time:hover {
+  color: #fff;
+}
+
+.controls__time[disabled] {
+  color: #fff;
+}

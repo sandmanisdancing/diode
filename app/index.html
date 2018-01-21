@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17242C">
+
+  <title>Diode Project</title>
+
+  <!-- check if fontsLoaded key is in sessionStorage -->
+  <script>
+  if (!sessionStorage.fontsLoaded) {
+    var script = document.createElement('script');
+
+    script.onload = function () {
+      var regular = new FontFaceObserver('Open Sans'),
+      semiBold = new FontFaceObserver('Open Sans', {
+        weight: 600
+      }),
+      bold = new FontFaceObserver('Open Sans', {
+        weight: 700
+      });
+
+      Promise.all([regular.load(), semiBold.load(), bold.load()]).then(function () {
+        sessionStorage.fontsLoaded = true;
+        document.body.classList.add('fonts-loaded');
+      }).catch(function () {
+        sessionStorage.fontsLoaded = false;
+      });
+    }
+
+    script.src = "scripts/fontfaceobserver.js";
+    document.head.appendChild(script);
+  } else {
+    document.documentElement.classList.add('fonts-loaded')
+  }
+  </script>
+
+  <link rel="stylesheet" href="styles/main.css" media="all" />
+
+  <script src="scripts/main.js" defer></script>
+</head>
+<body>
+  <header class="pageheader">
+    <div class="controls">
+      <button class="controls__u controls__start">В начало</button>
+      <button class="controls__u controls__plus5">&minus; 5 час</button>
+      <button class="controls__time">18:05</button>
+      <button class="controls__time">18:10</button>
+      <button class="controls__time">18:15</button>
+      <button class="controls__time">18:20</button>
+      <button class="controls__time">18:25</button>
+      <button class="controls__time">18:30</button>
+      <button class="controls__time">18:35</button>
+      <button class="controls__time">18:40</button>
+      <button class="controls__time" disabled>18:45</button>
+      <button class="controls__time">18:50</button>
+      <button class="controls__time">18:55</button>
+      <button class="controls__time">19:00</button>
+      <button class="controls__time">19:05</button>
+      <button class="controls__time">19:10</button>
+      <button class="controls__time">19:15</button>
+      <button class="controls__time">19:20</button>
+      <button class="controls__time">19:25</button>
+      <button class="controls__u controls__plus5">+ 5 час</button>
+      <button class="controls__u controls__end">В конец</button>
+    </div>
+  </header>
+
+  <main role="main">
+    <div class="pairs-wrapper">
+      <section class="pair">
+        <header class="pair__header">
+          <figure class="pair__icon">
+            <img src="images/neo.png" alt="" width="22" height="26">
+          </figure>
+          <div class="pair__name">neo/btc</div>
+        </header>
+
+        <div class="pair__meta">
+          <div class="pair__meta-block">
+            <div class="pair__meta-top">кол-во</div>
+            <div class="pair__meta-text">
+              <div class="pair__meta-digit">15</div>
+              <div class="pair__meta-coin">neo</div>
+            </div>
+          </div>
+          <div class="pair__meta-block">
+            <div class="pair__meta-top">24 часа</div>
+            <div class="pair__meta-text">
+              <div class="pair__meta-digit">0,012</div>
+              <div class="pair__meta-coin">btc</div>
+            </div>
+          </div>
+          <div class="pair__meta-block">
+            <div class="pair__meta-top">Всё время</div>
+            <div class="pair__meta-text">
+              <div class="pair__meta-digit">0,213</div>
+              <div class="pair__meta-coin">btc</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pair__line">
+          <div class="pair__graph pair__graph--green"></div>
+          <div class="pair__exchange">
+            <figure class="pair__action">
+              <img src="images/plus.svg" width="13" height="13" alt="">
+            </figure>
+            <div class="pair__exchange-icon">
+              <img src="images/kucoin.png" alt="" width="14" height="15">
+            </div>
+            <div class="pair__digits">
+              <div class="pair__digits--small">0,0824</div>
+              <div class="pair__digits--big">0,0822</div>
+            </div>
+            <div class="pair__coin">btc</div>
+          </div>
+          <div class="pair__exchange">
+            <figure class="pair__action">
+              <img src="images/minus.svg" width="13" height="13" alt="">
+            </figure>
+            <div class="pair__exchange-icon">
+              <img src="images/binance.png" alt="" width="14" height="15">
+            </div>
+            <div class="pair__digits">
+              <div class="pair__digits--small">0,0824</div>
+              <div class="pair__digits--big">0,0822</div>
+            </div>
+            <div class="pair__coin">btc</div>
+          </div>
+        </div>
+
+        <div class="pair__line pair__line--inactive">
+          <div class="pair__graph pair__graph--red"></div>
+          <div class="pair__exchange">
+            <figure class="pair__action">
+              <img src="images/minus.svg" width="13" height="13" alt="">
+            </figure>
+            <figure class="pair__exchange-icon">
+              <img src="images/kucoin.png" alt="" width="14" height="15">
+            </figure>
+            <div class="pair__digits">
+              <div class="pair__digits--small">0,0824</div>
+              <div class="pair__digits--big">0,0822</div>
+            </div>
+            <div class="pair__coin">btc</div>
+          </div>
+          <div class="pair__exchange">
+            <figure class="pair__action">
+              <img src="images/plus.svg" width="13" height="13" alt="">
+            </figure>
+            <figure class="pair__exchange-icon">
+              <img src="images/binance.png" alt="" width="14" height="15">
+            </figure>
+            <div class="pair__digits">
+              <div class="pair__digits--small">0,0824</div>
+              <div class="pair__digits--big">0,0822</div>
+            </div>
+            <div class="pair__coin">btc</div>
+          </div>
+        </div>
+
+        <section class="last">
+          <header class="last__header">Последние действия:</header>
+
+          <div class="last__line">
+            <div class="last__time">21:46</div>
+
+            <div class="last__action">
+              <figure class="last__action-icon">
+                <img src="images/plus.svg" alt="">
+              </figure>
+              <figure class="last__market-icon">
+                <img src="images/kucoin.png" alt="" width="14" height="15">
+              </figure>
+              <div class="last__coin">
+                <div class="last__coin-digit">15</div>
+                neo
+              </div>
+              <div class="last__change">
+                <div class="last__change-digit">+0,159</div>
+                btc
+              </div>
+            </div>
+
+            <div class="last__action">
+              <figure class="last__action-icon">
+                <img src="images/minus.svg" alt="">
+              </figure>
+              <figure class="last__market-icon">
+                <img src="images/binance.png" alt="" width="14" height="15">
+              </figure>
+              <div class="last__coin">
+                <div class="last__coin-digit">15</div>
+                neo
+              </div>
+              <div class="last__change">
+                <div class="last__change-digit">&minus;0,153</div>
+                btc
+              </div>
+            </div>
+          </div>
+
+          <div class="last__separator"></div>
+
+          <div class="last__total">
+            <div class="last__total-head">Total</div>
+            <div class="last__total-coin">
+              <div class="last__total-digit">+0,0057</div>
+              btc
+            </div>
+          </div>
+
+          <div class="last__all">
+            <div class="last__line">
+              <div class="last__time">21:46</div>
+
+              <div class="last__action">
+                <figure class="last__action-icon">
+                  <img src="images/plus.svg" alt="">
+                </figure>
+                <figure class="last__market-icon">
+                  <img src="images/kucoin.png" alt="" width="14" height="15">
+                </figure>
+                <div class="last__coin">
+                  <div class="last__coin-digit">15</div>
+                  neo
+                </div>
+                <div class="last__change">
+                  <div class="last__change-digit">+0,159</div>
+                  btc
+                </div>
+              </div>
+
+              <div class="last__action">
+                <figure class="last__action-icon">
+                  <img src="images/minus.svg" alt="">
+                </figure>
+                <figure class="last__market-icon">
+                  <img src="images/binance.png" alt="" width="14" height="15">
+                </figure>
+                <div class="last__coin">
+                  <div class="last__coin-digit">15</div>
+                  neo
+                </div>
+                <div class="last__change">
+                  <div class="last__change-digit">&minus;0,153</div>
+                  btc
+                </div>
+              </div>
+            </div>
+            <div class="last__line">
+              <div class="last__time">21:46</div>
+
+              <div class="last__action">
+                <figure class="last__action-icon">
+                  <img src="images/plus.svg" alt="">
+                </figure>
+                <figure class="last__market-icon">
+                  <img src="images/kucoin.png" alt="" width="14" height="15">
+                </figure>
+                <div class="last__coin">
+                  <div class="last__coin-digit">15</div>
+                  neo
+                </div>
+                <div class="last__change">
+                  <div class="last__change-digit">+0,159</div>
+                  btc
+                </div>
+              </div>
+
+              <div class="last__action">
+                <figure class="last__action-icon">
+                  <img src="images/minus.svg" alt="">
+                </figure>
+                <figure class="last__market-icon">
+                  <img src="images/binance.png" alt="" width="14" height="15">
+                </figure>
+                <div class="last__coin">
+                  <div class="last__coin-digit">15</div>
+                  neo
+                </div>
+                <div class="last__change">
+                  <div class="last__change-digit">&minus;0,153</div>
+                  btc
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="pair">
+        <header class="pair__header">
+          <figure class="pair__icon">
+            <img src="images/neo.png" alt="" width="22" height="26">
+          </figure>
+          <div class="pair__name">neo/btc</div>
+        </header>
+
+        <div class="pair__meta">
+          <div class="pair__meta-block">
+            <div class="pair__meta-top">кол-во</div>
+            <div class="pair__meta-text">
+              <div class="pair__meta-digit">15</div>
+              <div class="pair__meta-coin">neo</div>
+            </div>
+          </div>
+          <div class="pair__meta-block">
+            <div class="pair__meta-top">24 часа</div>
+            <div class="pair__meta-text">
+              <div class="pair__meta-digit">0,012</div>
+              <div class="pair__meta-coin">btc</div>
+            </div>
+          </div>
+          <div class="pair__meta-block">
+            <div class="pair__meta-top">Всё время</div>
+            <div class="pair__meta-text">
+              <div class="pair__meta-digit">0,213</div>
+              <div class="pair__meta-coin">btc</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pair__line pair__line--inactive">
+          <div class="pair__graph pair__graph--green"></div>
+          <div class="pair__exchange">
+            <figure class="pair__action">
+              <img src="images/plus.svg" width="13" height="13" alt="">
+            </figure>
+            <div class="pair__exchange-icon">
+              <img src="images/kucoin.png" alt="" width="14" height="15">
+            </div>
+            <div class="pair__digits">
+              <div class="pair__digits--small">0,0824</div>
+              <div class="pair__digits--big">0,0822</div>
+            </div>
+            <div class="pair__coin">btc</div>
+          </div>
+          <div class="pair__exchange">
+            <figure class="pair__action">
+              <img src="images/minus.svg" width="13" height="13" alt="">
+            </figure>
+            <div class="pair__exchange-icon">
+              <img src="images/binance.png" alt="" width="14" height="15">
+            </div>
+            <div class="pair__digits">
+              <div class="pair__digits--small">0,0824</div>
+              <div class="pair__digits--big">0,0822</div>
+            </div>
+            <div class="pair__coin">btc</div>
+          </div>
+        </div>
+
+        <div class="pair__line">
+          <div class="pair__graph pair__graph--red"></div>
+          <div class="pair__exchange">
+            <figure class="pair__action">
+              <img src="images/minus.svg" width="13" height="13" alt="">
+            </figure>
+            <figure class="pair__exchange-icon">
+              <img src="images/kucoin.png" alt="" width="14" height="15">
+            </figure>
+            <div class="pair__digits">
+              <div class="pair__digits--small">0,0824</div>
+              <div class="pair__digits--big">0,0822</div>
+            </div>
+            <div class="pair__coin">btc</div>
+          </div>
+          <div class="pair__exchange">
+            <figure class="pair__action">
+              <img src="images/plus.svg" width="13" height="13" alt="">
+            </figure>
+            <figure class="pair__exchange-icon">
+              <img src="images/binance.png" alt="" width="14" height="15">
+            </figure>
+            <div class="pair__digits">
+              <div class="pair__digits--small">0,0824</div>
+              <div class="pair__digits--big">0,0822</div>
+            </div>
+            <div class="pair__coin">btc</div>
+          </div>
+        </div>
+
+        <section class="last">
+          <header class="last__header">Последние действия:</header>
+
+          <div class="last__line">
+            <div class="last__time">21:46</div>
+
+            <div class="last__action">
+              <figure class="last__action-icon">
+                <img src="images/plus.svg" alt="">
+              </figure>
+              <figure class="last__market-icon">
+                <img src="images/kucoin.png" alt="" width="14" height="15">
+              </figure>
+              <div class="last__coin">
+                <div class="last__coin-digit">15</div>
+                neo
+              </div>
+              <div class="last__change">
+                <div class="last__change-digit">+0,159</div>
+                btc
+              </div>
+            </div>
+
+            <div class="last__action">
+              <figure class="last__action-icon">
+                <img src="images/minus.svg" alt="">
+              </figure>
+              <figure class="last__market-icon">
+                <img src="images/binance.png" alt="" width="14" height="15">
+              </figure>
+              <div class="last__coin">
+                <div class="last__coin-digit">15</div>
+                neo
+              </div>
+              <div class="last__change">
+                <div class="last__change-digit">&minus;0,153</div>
+                btc
+              </div>
+            </div>
+          </div>
+
+          <div class="last__separator"></div>
+
+          <div class="last__total">
+            <div class="last__total-head">Total</div>
+            <div class="last__total-coin">
+              <div class="last__total-digit">+0,0057</div>
+              btc
+            </div>
+          </div>
+
+          <div class="last__all">
+            <div class="last__line">
+              <div class="last__time">21:46</div>
+
+              <div class="last__action">
+                <figure class="last__action-icon">
+                  <img src="images/plus.svg" alt="">
+                </figure>
+                <figure class="last__market-icon">
+                  <img src="images/kucoin.png" alt="" width="14" height="15">
+                </figure>
+                <div class="last__coin">
+                  <div class="last__coin-digit">15</div>
+                  neo
+                </div>
+                <div class="last__change">
+                  <div class="last__change-digit">+0,159</div>
+                  btc
+                </div>
+              </div>
+
+              <div class="last__action">
+                <figure class="last__action-icon">
+                  <img src="images/minus.svg" alt="">
+                </figure>
+                <figure class="last__market-icon">
+                  <img src="images/binance.png" alt="" width="14" height="15">
+                </figure>
+                <div class="last__coin">
+                  <div class="last__coin-digit">15</div>
+                  neo
+                </div>
+                <div class="last__change">
+                  <div class="last__change-digit">&minus;0,153</div>
+                  btc
+                </div>
+              </div>
+            </div>
+            <div class="last__line">
+              <div class="last__time">21:46</div>
+
+              <div class="last__action">
+                <figure class="last__action-icon">
+                  <img src="images/plus.svg" alt="">
+                </figure>
+                <figure class="last__market-icon">
+                  <img src="images/kucoin.png" alt="" width="14" height="15">
+                </figure>
+                <div class="last__coin">
+                  <div class="last__coin-digit">15</div>
+                  neo
+                </div>
+                <div class="last__change">
+                  <div class="last__change-digit">+0,159</div>
+                  btc
+                </div>
+              </div>
+
+              <div class="last__action">
+                <figure class="last__action-icon">
+                  <img src="images/minus.svg" alt="">
+                </figure>
+                <figure class="last__market-icon">
+                  <img src="images/binance.png" alt="" width="14" height="15">
+                </figure>
+                <div class="last__coin">
+                  <div class="last__coin-digit">15</div>
+                  neo
+                </div>
+                <div class="last__change">
+                  <div class="last__change-digit">&minus;0,153</div>
+                  btc
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </div>
+  </main>
+
+  <footer class="pagefooter">
+
+  </footer>
+</body>
+</html>
