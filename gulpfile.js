@@ -31,9 +31,7 @@ const fs = require('fs'),
       runSequence = require('run-sequence'),
       bs = require('browser-sync'),
       gulpLoadPlugins = require('gulp-load-plugins'),
-      swPrecache = require('sw-precache'),
       pkg = require('./package.json'),
-      critical = require('critical').stream,
 
       autoprefixer = require('autoprefixer'),
       cssimport = require('postcss-import'),
@@ -44,48 +42,14 @@ const fs = require('fs'),
       reload = browserSync.reload;
 
 
-// Optimize images
-gulp.task('images', () => {
-  var sink = $.clone.sink();
-
-  return gulp.src(['app/images/**/*.{jpg,png,svg}', '!app/images/sprite/*'])
-    .pipe($.cache($.imagemin({
-      progressive: true,
-      optimizationLevel: 3
-    })))
-    .pipe(sink)
-    .pipe($.webp({
-      quality: 85
-    }))
-    .pipe(sink.tap())
-    .pipe(gulp.dest('dist/images'))
-    .pipe(browserSync.stream())
-    .pipe($.size({title: 'images'}));
-  }
-);
-
-// Clean cache
-gulp.task('cleanCache', () => {
-  return $.cache.clearAll();
-});
-
-// Copy fonts to dist
-gulp.task('fonts', () => {
-  return gulp.src(['app/fonts/**'])
-    .pipe(gulp.dest('dist/fonts'))
-    .pipe($.size({title: 'fonts'}));
-});
-
-// Copy all files from the root level (app)
-gulp.task('copy', ['fonts'], () =>
+// Copy images
+gulp.task('copy-images', () =>
   gulp.src([
-    'app/*',
-    '!app/*.html',
-    'node_modules/apache-server-configs/dist/.htaccess'
+    'app/images/**/*'
   ], {
     dot: true
-  }).pipe(gulp.dest('dist'))
-    .pipe($.size({title: 'copy'}))
+  }).pipe(gulp.dest('dist/images'))
+    .pipe($.size({title: 'copy-images'}))
 );
 
 // Compile and automatically prefix stylesheets
@@ -99,9 +63,7 @@ gulp.task('styles', () => {
   ];
 
   return gulp.src([
-    'app/styles/main.css',
-    'app/styles/desktop.css',
-    'app/styles/atf.css'
+    'app/styles/main.css'
   ])
     .pipe($.postcss(plugins))
     .on('error', handleError)
@@ -113,79 +75,62 @@ gulp.task('styles', () => {
     .pipe(browserSync.stream({match: "**/*.css"}));
 });
 
-gulp.task('critical', () => {
-  return gulp.src('dist/*.html')
-    .pipe(critical({
-      base: 'dist/',
-      src: 'index.html',
-      css: ['dist/styles/main.css'],
-      dest: 'styles/critical.css',
-      dimensions: [{
-        width: 768,
-        height: 1024
-      }],
-      minify: true,
-      ignore: ['@font-face']
-    }))
-    .pipe($.size({title: 'critical'}))
-    .pipe(gulp.dest('dist/styles'));
-});
-
-// Concatenate and minify JavaScript. Optionally transpiles ES2015 code to ES5.
-// to enables ES2015 support remove the line `"only": "gulpfile.babel.js",` in the
-// `.babelrc` file.
-var scriptsArray = [
-  './app/scripts/vue.js',
-  './app/scripts/mdrnzr-touch.js',
-  './app/scripts/inert.js',
-  './app/scripts/main.js'
-],
-    scriptsArrayProd = scriptsArray.slice(1);
-    scriptsArrayProd.splice(0, 0, './app/scripts/vue.min.js');
-
-// Copy
-gulp.task('copyScripts', () => {
-    gulp.src([
-      './app/scripts/fontfaceobserver.js',
-      './app/scripts/loadcss.full.min.js'
-    ])
-      .pipe($.size({title: 'copyScripts'}))
-      .pipe(gulp.dest('dist/scripts'))
-    }
-);
-
 function handleError (error) {
   console.log(error.toString());
   this.emit('end');
 }
 
+// Concatenate and minify JavaScript. Optionally transpiles ES2015 code to ES5.
+// to enables ES2015 support remove the line `"only": "gulpfile.babel.js",` in the
+// `.babelrc` file.
+var scriptsArray = [
+  './app/scripts/main.js'
+];
 
-// Concatenate all scripts
-gulp.task('scripts', ['copyScripts'], () => {
-    gulp.src(scriptsArray)
-      .pipe($.babel())
-      .on('error', handleError)
-      .pipe($.concat('main.js'))
-      .pipe($.size({title: 'scripts'}))
-      .pipe($.sourcemaps.write('.'))
-      .pipe(gulp.dest('dist/scripts'))
-    }
+// Copy scripts
+gulp.task('copy-scripts', () => {
+  gulp.src([
+    './app/scripts/*'
+  ])
+  .pipe($.size({title: 'copyScripts'}))
+  .pipe($.sourcemaps.write('.'))
+  .pipe(gulp.dest('dist/scripts'))
+}
 );
 
-// Concatenate & minify all scripts
-gulp.task('scriptsProd', ['copyScripts'], () => {
-    gulp.src(scriptsArrayProd)
-      .pipe($.babel())
-      .on('error', handleError)
-      .pipe($.concat('main.js'))
-      .pipe($.uglify({preserveComments: 'some'}).on('error', function(uglify) {
-        console.error(uglify.message);
-        this.emit('end');
-      }))
-      .pipe($.size({title: 'scriptsProd'}))
-      .pipe($.sourcemaps.write('.'))
-      .pipe(gulp.dest('dist/scripts'))
-    }
+// Concatenate & transpile all scripts
+gulp.task('scripts', () => {
+  gulp.src(scriptsArray)
+  .pipe($.concat('main.js'))
+  .pipe($.babel({
+    presets: [
+      ["es2015", {
+        "targets": {
+          "browsers": ["IE >= 9"]
+        }
+      }]
+    ]
+  }))
+  .pipe($.size({title: 'copyScripts'}))
+  .pipe($.sourcemaps.write('.'))
+  .pipe(gulp.dest('dist/scripts'))
+}
+);
+
+// Concatenate, transpile & minify all scripts
+gulp.task('scripts-prod', ['copy-scripts'], () => {
+  gulp.src(scriptsArrayProd)
+  .pipe($.babel())
+  .on('error', handleError)
+  .pipe($.concat('main.js'))
+  .pipe($.uglify({preserveComments: 'some'}).on('error', function (uglify) {
+    console.error(uglify.message);
+    this.emit('end');
+  }))
+  .pipe($.size({title: 'scriptsProd'}))
+  .pipe($.sourcemaps.write('.'))
+  .pipe(gulp.dest('dist/scripts'))
+}
 );
 
 // Scan your HTML for assets & optimize them
@@ -193,21 +138,8 @@ gulp.task('html', () => {
   return gulp.src('app/**/*.html')
     .pipe($.useref({
       searchPath: '{.tmp,app}',
-      noAssets: true
+      noAssets: true,
     }))
-
-    // Minify any HTML
-    .pipe($.if('*.html', $.htmlmin({
-      removeComments: true,
-      collapseWhitespace: true,
-      collapseBooleanAttributes: true,
-      removeAttributeQuotes: true,
-      removeRedundantAttributes: true,
-      removeEmptyAttributes: true,
-      removeScriptTypeAttributes: true,
-      removeStyleLinkTypeAttributes: true,
-      removeOptionalTags: false
-    })))
     // Output files
     .pipe($.if('*.html', $.size({title: 'html', showFiles: true})))
     .pipe(gulp.dest('dist'));
@@ -215,13 +147,6 @@ gulp.task('html', () => {
 
 // Clean output directory
 gulp.task('clean', cb => del(['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
-
-// Clean after build
-gulp.task('cleanAfter', cb => del([
-  'dist/styles/critical.css',
-  'dist/styles/index.css',
-  'dist/images/sprite/**'
-], {dot: true}));
 
 // Watch files for changes & reload
 gulp.task('serve', ['default'], () => {
@@ -242,9 +167,7 @@ gulp.task('serve', ['default'], () => {
 // Build dev files, the default task
 gulp.task('default', ['clean'], cb =>
   runSequence(
-    ['cleanCache', 'html', 'scripts', 'images', 'styles'],
-    'copy',
-    'generate-service-worker',
+    ['html', 'scripts', 'copy-images', 'styles'],
     cb
   )
 );
@@ -252,41 +175,7 @@ gulp.task('default', ['clean'], cb =>
 // Build production files, the default task
 gulp.task('build', ['clean'], cb =>
   runSequence(
-    ['cleanCache', 'html', 'scriptsProd', 'images', 'styles'],
-    'copy',
-    'generate-service-worker',
+    ['html', 'scripts-prod', 'copy-images', 'styles'],
     cb
   )
 );
-
-gulp.task('copy-sw-scripts', () => {
-  return gulp.src(['node_modules/sw-toolbox/sw-toolbox.js', 'app/scripts/sw/runtime-caching.js'])
-    .pipe(gulp.dest('dist/scripts/sw'));
-});
-
-gulp.task('generate-service-worker', ['copy-sw-scripts'], () => {
-  const rootDir = 'dist';
-  const filepath = path.join(rootDir, 'service-worker.js');
-
-  return swPrecache.write(filepath, {
-    // Used to avoid cache conflicts when serving on localhost.
-    cacheId: pkg.name || 'cryptowatcher-app',
-    // sw-toolbox.js needs to be listed first. It sets up methods used in runtime-caching.js.
-    importScripts: [
-      'scripts/sw/sw-toolbox.js',
-      'scripts/sw/runtime-caching.js'
-    ],
-    staticFileGlobs: [
-      // Add/remove glob patterns to match your directory setup.
-      `${rootDir}/images/**/*`,
-      `${rootDir}/fonts/**/*.woff2`,
-      `${rootDir}/scripts/**/*.js`,
-      `${rootDir}/styles/**/*.css`,
-      `${rootDir}/*.{html,json}`
-    ],
-    // Translates a static file path to the relative URL that it's served from.
-    // This is '/' rather than path.sep because the paths returned from
-    // glob always use '/'.
-    stripPrefix: rootDir + '/'
-  });
-});
