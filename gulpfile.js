@@ -167,7 +167,7 @@ gulp.task('serve', ['default'], () => {
 // Build dev files, the default task
 gulp.task('default', ['clean'], cb =>
   runSequence(
-    ['html', 'scripts', 'copy-images', 'styles'],
+    ['html', 'scripts', 'copy-images', 'copy-scripts', 'styles'],
     cb
   )
 );
@@ -175,7 +175,7 @@ gulp.task('default', ['clean'], cb =>
 // Build production files, the default task
 gulp.task('build', ['clean'], cb =>
   runSequence(
-    ['html', 'scripts-prod', 'copy-images', 'styles'],
+    ['html', 'scripts-prod', 'copy-images', 'copy-scripts', 'styles'],
     cb
   )
 );
